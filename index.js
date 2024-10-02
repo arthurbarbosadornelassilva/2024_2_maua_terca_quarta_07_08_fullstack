@@ -18,5 +18,20 @@ let filmes = [
         sinopse: "O físico J. Robert Oppenheimer trabalha com uma equipe de cientistas durante o Projeto Manhattan, levando ao desenvolvimento da bomba atômica."
     }
 ] 
+app.get("/filmes", (req, res) => {
+    res.json(filmes)
+})
+
+app.post("/filmes", (req, res) => {
+    //captura o que o usuário enviou
+    const titulo = req.body.titulo
+    const sinopse = req.body.sinopse
+    //monta o objeto filme para incluir na base
+    const filme = {titulo: titulo, sinopse: sinopse}
+    //adiciona o o novo filme à lista de filmes
+    filmes.push(filme)
+    //mostra a base atualizada
+    res.json(filmes)
+})
 
 app.listen(3000, () => console.log("up and running"))
