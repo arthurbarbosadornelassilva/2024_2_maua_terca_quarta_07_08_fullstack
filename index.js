@@ -1,6 +1,3 @@
-//string de conexão com o mongo
-//mongodb+srv://usuario_mongo:a_senha@cluster0.skf8n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
 const express = require ('express')
 const cors = require ('cors')
 const mongoose = require('mongoose')
@@ -9,35 +6,36 @@ const app = express()
 app.use (express.json())
 app.use (cors())
 
-//get http://localhost:3000/oi
-app.get('/oi', (req, res) => {
-    res.send('oi')
-})
+const Filme = mongoose.model("Filme", mongoose.Schema({
+    titulo: {type: String},
+    sinopse: {type: String}
+}))
 
-let filmes = [
-    {
-        titulo: "Divertidamente",
-        sinopse: "Com a mudança para uma nova cidade, as emoções de Riley, que tem apenas 11 anos de idade, ficam extremamente agitadas. Uma confusão na sala de controle do seu cérebro deixa a Alegria e a Tristeza de fora, afetando a vida de Riley radicalmente."
-    },
-    {
-        titulo: "Oppenheimer",
-        sinopse: "O físico J. Robert Oppenheimer trabalha com uma equipe de cientistas durante o Projeto Manhattan, levando ao desenvolvimento da bomba atômica."
-    }
-] 
-app.get("/filmes", (req, res) => {
+async function conectarAoMongo () {
+    await mongoose.connect(`mongodb+srv://pro_mac:mongo123@cluster0.skf8n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
+    
+}
+app.get("/filmes", async (req, res) => {
+    const filmes = await Filme.find()
     res.json(filmes)
 })
-
-app.post("/filmes", (req, res) => {
+app.post("/filmes", async (req, res) => {
     //captura o que o usuário enviou
     const titulo = req.body.titulo
     const sinopse = req.body.sinopse
-    //monta o objeto filme para incluir na base
-    const filme = {titulo: titulo, sinopse: sinopse}
-    //adiciona o o novo filme à lista de filmes
-    filmes.push(filme)
-    //mostra a base atualizada
+    //montar um objeto de acordo com o modelo Filme
+    const filme = new Filme({titulo: titulo, sinopse: sinopse})
+    await filme.save()
+    const filmes = await Filme.find()
     res.json(filmes)
 })
 
-app.listen(3000, () => console.log("up and running"))
+app.listen(3000, () => {
+    try {
+        conectarAoMongo()
+        console.log("server up and running e conexão ok")
+    }
+    catch (e) {
+        console.log ('erro na conexão', e)
+    }
+})
