@@ -1,6 +1,8 @@
 const express = require ('express')
 const cors = require ('cors')
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const uniqueValidator = require('mongoose-unique-validator')
 const app = express()
 
@@ -38,13 +40,40 @@ app.post("/filmes", async (req, res) => {
     res.json(filmes)
 })
 app.post("/signup", async (req, res) => {
+    try {
+        const login = req.body.login
+        const password = req.body.password
+        const senhacriptografada = await bcrypt.hash(password, 10)
+        const usuario = new Usuario({login: login, password: senhacriptografada})
+        const respMongo = await usuario.save()
+        console.log(respMongo)
+        res.status(201).end()
+    }
+    catch(e) {
+        console.log(e)
+        res.status(409).end()
+    }
+})
+
+app.post('/login', async (req, res) => {
     const login = req.body.login
     const password = req.body.password
-    const usuario = new Usuario({login: login, password: password})
-    const respMongo = await usuario.save()
-    console.log(respMongo)
-    res.end()
+    const usuarioExiste = await Usuario.findOne({login: login})
+    if (!usuarioExiste) {
+        return res.status(401).json({mensagem: "login inválido"})
+    }
+    const senhaValida = await bcrypt.compare(password, usuarioExiste.password)
+    if (!senhaValida) {
+        return res.status(401).json({mensagem: "senha inválida"})
+    }
+    const token = jwt.sign(
+        {login: login},
+        "chave-secreta",
+        {expiresIn: "1h"}
+    )
+    res.status(200).json({token: token})
 })
+
 app.listen(3000, () => {
     try {
         conectarAoMongo()
