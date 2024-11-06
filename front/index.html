@@ -20,18 +20,20 @@
           </div>
           <div class="modal-body">
             <div class="d-none alert alert-dismissible fade alert-modal-cadastro" role="alert"></div>
-            <div class="mb-3">
-              <label for="usuarioCadastroInput" class="col-form-label">Usuário</label>
-              <input type="text" id="usuarioCadastroInput" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label for="passwordCadastroInput" class="col-form-label">Senha</label>
-              <input type="password" id="passwordCadastroInput" class="form-control">
-            </div>
+            <form>
+              <div class="mb-3">
+                <label for="usuarioCadastroInput" class="col-form-label">Usuário</label>
+                <input type="text" id="usuarioCadastroInput" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label for="passwordCadastroInput" class="col-form-label">Senha</label>
+                <input type="password" id="passwordCadastroInput" class="form-control">
+              </div>
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary">Cadastrar</button>
+            <button onclick="cadastrarUsuario()" type="button" class="btn btn-primary">Cadastrar</button>
           </div>
         </div>
        </div>
