@@ -22,7 +22,7 @@ usuarioSchema.plugin(uniqueValidator)
 const Usuario = mongoose.model("Usuario", usuarioSchema)
 
 async function conectarAoMongo () {
-    await mongoose.connect(`mongodb+srv://pro_mac:mongo123@cluster0.skf8n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
+    await mongoose.connect(`mongodb+srv://xarthsilvax:12345@cluster0.abfit.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)
     
 }
 app.get("/filmes", async (req, res) => {
